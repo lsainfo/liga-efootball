@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liga eFootball - Tabela de Classificação</title>
+    <meta name="description" content="Acompanhe a classificação e resultados da Liga eFootball">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .efootball-gradient { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%); }
+        .team-row:hover { transform: translateY(-1px); transition: all 0.2s ease; }
+        .match-input { transition: all 0.2s ease; }
+        .match-input:focus { transform: scale(1.05); }
+
+        @media (max-width: 768px) {
+            .mobile-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .mobile-table { min-width: 600px; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <div class="efootball-gradient text-white py-8 mb-8">
+        <div class="container mx-auto px-4 relative">
+            <div class="flex items-center justify-center space-x-4">
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+                    <svg class="w-10 h-10 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                    </svg>
+                </div>
+                <div class="text-center">
+                    <h1 class="text-4xl font-bold">eFootball Liga</h1>
+                    <p class="text-blue-100 text-lg">Temporada 2025</p>
+                    <p class="text-blue-200 text-sm mt-2">🔒 Uso exclusivo do grupo</p>
+                </div>
+                <button onclick="shareLeague()" class="share-button absolute top-4 right-4 px-4 py-2 text-white font-semibold rounded-lg transition-all duration-300 flex items-center space-x-2 bg-green-500 hover:bg-green-600 shadow-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.700"/>
+                    </svg>
+                    <span class="hidden sm:inline">Compartilhar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 max-w-7xl">
+        <!-- Tabela de Classificação -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+            <div class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white p-6">
+                <h2 class="text-2xl font-bold flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    Tabela de Classificação
+                </h2>
+            </div>
+            <div class="mobile-scroll">
+                <table class="w-full mobile-table">
+                    <thead class="bg-gray-100">
+                        <tr class="text-sm font-semibold text-gray-700">
+                            <th class="px-4 py-3 text-left">Pos</th>
+                            <th class="px-4 py-3 text-left">Time/Jogador</th>
+                            <th class="px-4 py-3 text-center">J</th>
+                            <th class="px-4 py-3 text-center">V</th>
+                            <th class="px-4 py-3 text-center">E</th>
+                            <th class="px-4 py-3 text-center">D</th>
+                            <th class="px-4 py-3 text-center">GP</th>
+                            <th class="px-4 py-3 text-center">GC</th>
+                            <th class="px-4 py-3 text-center">SG</th>
+                            <th class="px-4 py-3 text-center font-bold">PTS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leagueTable">
+                        <!-- Tabela será preenchida pelo JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Rodadas -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-green-600 to-emerald-500 text-white p-6">
+                <h2 class="text-2xl font-bold flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                    </svg>
+                    Resultados das Rodadas
+                </h2>
+            </div>
+            <div class="p-6">
+                <div id="roundsContainer" class="space-y-6">
+                    <!-- Rodadas serão preenchidas pelo JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados dos times
+        const teams = [
+            'LSAinfo', 'Modelo FC', 'Revoada FC', 'Seertão EC', 'Jogador 5',
+            'Jogador 6', 'Jogador 7', 'Jogador 8', 'Jogador 9', 'Jogador 10'
+        ];
+
+        // Dados das rodadas
+        const rounds = [
+            [
+                ['LSAinfo', 'Jogador 10'],
+                ['Modelo FC', 'Jogador 9'],
+                ['Revoada FC', 'Jogador 8'],
+                ['Seertão EC', 'Jogador 7'],
+                ['Jogador 5', 'Jogador 6']
+            ],
+            [
+                ['LSAinfo', 'Jogador 9'],
+                ['Jogador 10', 'Jogador 8'],
+                ['Modelo FC', 'Jogador 7'],
+                ['Revoada FC', 'Jogador 6'],
+                ['Seertão EC', 'Jogador 5']
+            ],
+            [
+                ['LSAinfo', 'Jogador 8'],
+                ['Jogador 9', 'Jogador 7'],
+                ['Jogador 10', 'Jogador 6'],
+                ['Modelo FC', 'Jogador 5'],
+                ['Revoada FC', 'Seertão EC']
+            ],
+            [
+                ['LSAinfo', 'Jogador 7'],
+                ['Jogador 8', 'Jogador 6'],
+                ['Jogador 9', 'Jogador 5'],
+                ['Jogador 10', 'Seertão EC'],
+                ['Modelo FC', 'Revoada FC']
+            ],
+            [
+                ['LSAinfo', 'Jogador 6'],
+                ['Jogador 7', 'Jogador 5'],
+                ['Jogador 8', 'Seertão EC'],
+                ['Jogador 9', 'Revoada FC'],
+                ['Jogador 10', 'Modelo FC']
+            ],
+            [
+                ['LSAinfo', 'Jogador 5'],
+                ['Jogador 6', 'Seertão EC'],
+                ['Jogador 7', 'Revoada FC'],
+                ['Jogador 8', 'Modelo FC'],
+                ['Jogador 9', 'Jogador 10']
+            ],
+            [
+                ['LSAinfo', 'Seertão EC'],
+                ['Jogador 5', 'Revoada FC'],
+                ['Jogador 6', 'Modelo FC'],
+                ['Jogador 7', 'Jogador 10'],
+                ['Jogador 8', 'Jogador 9']
+            ],
+            [
+                ['LSAinfo', 'Revoada FC'],
+                ['Seertão EC', 'Modelo FC'],
+                ['Jogador 5', 'Jogador 10'],
+                ['Jogador 6', 'Jogador 9'],
+                ['Jogador 7', 'Jogador 8']
+            ],
+            [
+                ['LSAinfo', 'Modelo FC'],
+                ['Revoada FC', 'Jogador 10'],
+                ['Seertão EC', 'Jogador 9'],
+                ['Jogador 5', 'Jogador 8'],
+                ['Jogador 6', 'Jogador 7']
+            ]
+        ];
+
+        // Estatísticas dos times
+        let teamStats = {};
+        teams.forEach(team => {
+            teamStats[team] = {
+                games: 0, wins: 0, draws: 0, losses: 0,
+                goalsFor: 0, goalsAgainst: 0, points: 0
+            };
+        });
+
+        // Função para calcular saldo de gols
+        function calculateGoalDifference(goalsFor, goalsAgainst) {
+            return goalsFor - goalsAgainst;
+        }
+
+        // Função para atualizar a tabela
+        function updateTable() {
+            const tableBody = document.getElementById('leagueTable');
+            
+            // Ordenar times por pontos, depois por saldo de gols
+            const sortedTeams = teams.slice().sort((a, b) => {
+                const statsA = teamStats[a];
+                const statsB = teamStats[b];
+                
+                if (statsB.points !== statsA.points) {
+                    return statsB.points - statsA.points;
+                }
+                
+                const sgA = calculateGoalDifference(statsA.goalsFor, statsA.goalsAgainst);
+                const sgB = calculateGoalDifference(statsB.goalsFor, statsB.goalsAgainst);
+                
+                if (sgB !== sgA) {
+                    return sgB - sgA;
+                }
+                
+                return statsB.goalsFor - statsA.goalsFor;
+            });
+
+            tableBody.innerHTML = '';
+            sortedTeams.forEach((team, index) => {
+                const stats = teamStats[team];
+                const goalDiff = calculateGoalDifference(stats.goalsFor, stats.goalsAgainst);
+                const position = index + 1;
+                
+                let positionClass = '';
+                if (position <= 4) positionClass = 'bg-green-50 border-l-4 border-green-500';
+                else if (position >= 7) positionClass = 'bg-red-50 border-l-4 border-red-500';
+                
+                const row = document.createElement('tr');
+                row.className = `team-row ${positionClass} hover:bg-gray-50`;
+                row.innerHTML = `
+                    <td class="px-4 py-3 font-bold text-gray-800">${position}º</td>
+                    <td class="px-4 py-3 font-semibold text-gray-900">${team}</td>
+                    <td class="px-4 py-3 text-center text-gray-700">${stats.games}</td>
+                    <td class="px-4 py-3 text-center text-green-600 font-semibold">${stats.wins}</td>
+                    <td class="px-4 py-3 text-center text-yellow-600 font-semibold">${stats.draws}</td>
+                    <td class="px-4 py-3 text-center text-red-600 font-semibold">${stats.losses}</td>
+                    <td class="px-4 py-3 text-center text-blue-600 font-semibold">${stats.goalsFor}</td>
+                    <td class="px-4 py-3 text-center text-red-500 font-semibold">${stats.goalsAgainst}</td>
+                    <td class="px-4 py-3 text-center font-bold ${goalDiff >= 0 ? 'text-green-600' : 'text-red-600'}">${goalDiff >= 0 ? '+' : ''}${goalDiff}</td>
+                    <td class="px-4 py-3 text-center font-bold text-lg text-blue-700">${stats.points}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Função para processar resultado
+        function processResult(team1, team2, goals1, goals2) {
+            if (goals1 === '' || goals2 === '' || goals1 < 0 || goals2 < 0) return;
+            
+            goals1 = parseInt(goals1);
+            goals2 = parseInt(goals2);
+            
+            // Atualizar estatísticas
+            teamStats[team1].games++;
+            teamStats[team2].games++;
+            teamStats[team1].goalsFor += goals1;
+            teamStats[team1].goalsAgainst += goals2;
+            teamStats[team2].goalsFor += goals2;
+            teamStats[team2].goalsAgainst += goals1;
+            
+            if (goals1 > goals2) {
+                teamStats[team1].wins++;
+                teamStats[team1].points += 3;
+                teamStats[team2].losses++;
+            } else if (goals1 < goals2) {
+                teamStats[team2].wins++;
+                teamStats[team2].points += 3;
+                teamStats[team1].losses++;
+            } else {
+                teamStats[team1].draws++;
+                teamStats[team2].draws++;
+                teamStats[team1].points++;
+                teamStats[team2].points++;
+            }
+            
+            updateTable();
+        }
+
+        // Função para resetar estatísticas de um jogo
+        function resetMatch(team1, team2, oldGoals1, oldGoals2) {
+            if (oldGoals1 === '' || oldGoals2 === '' || oldGoals1 < 0 || oldGoals2 < 0) return;
+            
+            oldGoals1 = parseInt(oldGoals1);
+            oldGoals2 = parseInt(oldGoals2);
+            
+            // Reverter estatísticas
+            teamStats[team1].games--;
+            teamStats[team2].games--;
+            teamStats[team1].goalsFor -= oldGoals1;
+            teamStats[team1].goalsAgainst -= oldGoals2;
+            teamStats[team2].goalsFor -= oldGoals2;
+            teamStats[team2].goalsAgainst -= oldGoals1;
+            
+            if (oldGoals1 > oldGoals2) {
+                teamStats[team1].wins--;
+                teamStats[team1].points -= 3;
+                teamStats[team2].losses--;
+            } else if (oldGoals1 < oldGoals2) {
+                teamStats[team2].wins--;
+                teamStats[team2].points -= 3;
+                teamStats[team1].losses--;
+            } else {
+                teamStats[team1].draws--;
+                teamStats[team2].draws--;
+                teamStats[team1].points--;
+                teamStats[team2].points--;
+            }
+        }
+
+        // Criar interface das rodadas
+        function createRounds() {
+            const container = document.getElementById('roundsContainer');
+            
+            rounds.forEach((round, roundIndex) => {
+                const roundDiv = document.createElement('div');
+                roundDiv.className = 'bg-gray-50 rounded-lg p-4';
+                roundDiv.innerHTML = `
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center justify-between">
+                        <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm mr-3">Rodada ${roundIndex + 1}</span>
+                        <button onclick="shareRoundResults(${roundIndex + 1})" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.700"/>
+                            </svg>
+                            <span>Compartilhar</span>
+                        </button>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        ${round.map((match, matchIndex) => `
+                            <div class="bg-white rounded-lg p-4 shadow-sm border">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="font-semibold text-gray-800 text-sm">${match[0]}</span>
+                                    <span class="text-gray-500 font-bold">VS</span>
+                                    <span class="font-semibold text-gray-800 text-sm">${match[1]}</span>
+                                </div>
+                                <div class="flex items-center justify-center space-x-2">
+                                    <input type="number" 
+                                           id="goals_${roundIndex}_${matchIndex}_0" 
+                                           class="match-input w-12 h-10 text-center border-2 border-gray-300 rounded-lg font-bold text-lg focus:border-blue-500 focus:outline-none"
+                                           min="0" 
+                                           placeholder="0"
+                                           data-round="${roundIndex}"
+                                           data-match="${matchIndex}"
+                                           data-team="0">
+                                    <span class="text-gray-400 font-bold">-</span>
+                                    <input type="number" 
+                                           id="goals_${roundIndex}_${matchIndex}_1" 
+                                           class="match-input w-12 h-10 text-center border-2 border-gray-300 rounded-lg font-bold text-lg focus:border-blue-500 focus:outline-none"
+                                           min="0" 
+                                           placeholder="0"
+                                           data-round="${roundIndex}"
+                                           data-match="${matchIndex}"
+                                           data-team="1">
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(roundDiv);
+            });
+            
+            // Adicionar event listeners
+            document.querySelectorAll('.match-input').forEach(input => {
+                let oldValue = '';
+                
+                input.addEventListener('focus', function() {
+                    oldValue = this.value;
+                });
+                
+                input.addEventListener('input', function() {
+                    const round = parseInt(this.dataset.round);
+                    const match = parseInt(this.dataset.match);
+                    const team = parseInt(this.dataset.team);
+                    
+                    const team1 = rounds[round][match][0];
+                    const team2 = rounds[round][match][1];
+                    
+                    const goals1Input = document.getElementById(`goals_${round}_${match}_0`);
+                    const goals2Input = document.getElementById(`goals_${round}_${match}_1`);
+                    
+                    const oldGoals1 = team === 0 ? oldValue : goals1Input.value;
+                    const oldGoals2 = team === 1 ? oldValue : goals2Input.value;
+                    
+                    // Reset do jogo anterior se existir
+                    if (oldGoals1 !== '' && oldGoals2 !== '') {
+                        resetMatch(team1, team2, oldGoals1, oldGoals2);
+                    }
+                    
+                    // Processar novo resultado
+                    processResult(team1, team2, goals1Input.value, goals2Input.value);
+                    
+                    oldValue = this.value;
+                });
+            });
+        }
+
+
+
+        // Função para compartilhar resultados da rodada
+        function shareRoundResults(roundNumber) {
+            const round = rounds[roundNumber - 1];
+            let message = `🏆 *Liga eFootball - Rodada ${roundNumber}*\n\n`;
+            
+            round.forEach((match, index) => {
+                const team1 = match[0];
+                const team2 = match[1];
+                const goals1Input = document.getElementById(`goals_${roundNumber - 1}_${index}_0`);
+                const goals2Input = document.getElementById(`goals_${roundNumber - 1}_${index}_1`);
+                
+                if (goals1Input.value !== '' && goals2Input.value !== '') {
+                    const goals1 = goals1Input.value;
+                    const goals2 = goals2Input.value;
+                    let result = '';
+                    
+                    if (parseInt(goals1) > parseInt(goals2)) {
+                        result = '🟢';
+                    } else if (parseInt(goals1) < parseInt(goals2)) {
+                        result = '🔴';
+                    } else {
+                        result = '🟡';
+                    }
+                    
+                    message += `${result} ${team1} ${goals1} x ${goals2} ${team2}\n`;
+                } else {
+                    message += `⚪ ${team1} - x - ${team2}\n`;
+                }
+            });
+            
+            message += `\n📊 Acompanhe a classificação completa: ${window.location.href}`;
+            
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Função para compartilhar classificação
+        function shareLeague() {
+            // Ordenar times para classificação
+            const sortedTeams = teams.slice().sort((a, b) => {
+                const statsA = teamStats[a];
+                const statsB = teamStats[b];
+                
+                if (statsB.points !== statsA.points) {
+                    return statsB.points - statsA.points;
+                }
+                
+                const sgA = calculateGoalDifference(statsA.goalsFor, statsA.goalsAgainst);
+                const sgB = calculateGoalDifference(statsB.goalsFor, statsB.goalsAgainst);
+                
+                if (sgB !== sgA) {
+                    return sgB - sgA;
+                }
+                
+                return statsB.goalsFor - statsA.goalsFor;
+            });
+
+            let message = `🏆 *Liga eFootball - Classificação*\n\n`;
+            
+            sortedTeams.forEach((team, index) => {
+                const stats = teamStats[team];
+                const goalDiff = calculateGoalDifference(stats.goalsFor, stats.goalsAgainst);
+                const position = index + 1;
+                
+                let emoji = '';
+                if (position <= 4) emoji = '🟢';
+                else if (position >= 7) emoji = '🔴';
+                else emoji = '🟡';
+                
+                message += `${emoji} ${position}º ${team} - ${stats.points}pts (${stats.games}j)\n`;
+            });
+            
+            message += `\n📊 Acompanhe todos os resultados: ${window.location.href}`;
+            
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Inicializar
+        updateTable();
+        createRounds();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96c2cec92302f1e3',t:'MTc1NDY5NTg5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
