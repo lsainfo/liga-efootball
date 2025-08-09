@@ -36,7 +36,6 @@
                 <div class="text-center">
                     <h1 class="text-4xl font-bold">eFootball Liga</h1>
                     <p class="text-blue-100 text-lg">Temporada 2025</p>
-                    <p class="text-blue-200 text-sm mt-2">🔄 Sincronização em tempo real</p>
                 </div>
                 <button onclick="shareLeague()" class="share-button absolute top-4 right-4 px-4 py-2 text-white font-semibold rounded-lg transition-all duration-300 flex items-center space-x-2 bg-green-500 hover:bg-green-600 shadow-lg">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -44,12 +43,6 @@
                     </svg>
                     <span class="hidden sm:inline">Compartilhar</span>
                 </button>
-            </div>
-            <!-- Status de conexão -->
-            <div id="connectionStatus" class="text-center mt-4">
-                <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">
-                    🔄 Conectando...
-                </span>
             </div>
         </div>
     </div>
@@ -71,6 +64,7 @@
                         <tr class="text-sm font-semibold text-gray-700">
                             <th class="px-4 py-3 text-left">Pos</th>
                             <th class="px-4 py-3 text-left">Jogador</th>
+                            <th class="px-4 py-3 text-center font-bold">PTS</th>
                             <th class="px-4 py-3 text-center">J</th>
                             <th class="px-4 py-3 text-center">V</th>
                             <th class="px-4 py-3 text-center">E</th>
@@ -78,7 +72,6 @@
                             <th class="px-4 py-3 text-center">GP</th>
                             <th class="px-4 py-3 text-center">GC</th>
                             <th class="px-4 py-3 text-center">SG</th>
-                            <th class="px-4 py-3 text-center font-bold">PTS</th>
                         </tr>
                     </thead>
                     <tbody id="leagueTable">
@@ -281,6 +274,7 @@
                 row.innerHTML = `
                     <td class="px-4 py-3 font-bold text-gray-800">${position}º</td>
                     <td class="px-4 py-3 font-semibold text-gray-900">${team}</td>
+                    <td class="px-4 py-3 text-center font-bold text-lg text-blue-700">${stats.points}</td>
                     <td class="px-4 py-3 text-center text-gray-700">${stats.games}</td>
                     <td class="px-4 py-3 text-center text-green-600 font-semibold">${stats.wins}</td>
                     <td class="px-4 py-3 text-center text-yellow-600 font-semibold">${stats.draws}</td>
@@ -288,7 +282,6 @@
                     <td class="px-4 py-3 text-center text-blue-600 font-semibold">${stats.goalsFor}</td>
                     <td class="px-4 py-3 text-center text-red-500 font-semibold">${stats.goalsAgainst}</td>
                     <td class="px-4 py-3 text-center font-bold ${goalDiff >= 0 ? 'text-green-600' : 'text-red-600'}">${goalDiff >= 0 ? '+' : ''}${goalDiff}</td>
-                    <td class="px-4 py-3 text-center font-bold text-lg text-blue-700">${stats.points}</td>
                 `;
                 tableBody.appendChild(row);
             });
@@ -307,10 +300,8 @@
                 matchesData = data || [];
                 updateTable();
                 updateRoundsDisplay();
-                updateConnectionStatus('connected');
             } catch (error) {
                 console.error('Erro ao carregar dados:', error);
-                updateConnectionStatus('error');
             }
         }
 
@@ -353,37 +344,10 @@
                 
             } catch (error) {
                 console.error('Erro ao salvar:', error);
-                updateConnectionStatus('error');
             }
         }
 
-        // Função para atualizar status de conexão
-        function updateConnectionStatus(status) {
-            const statusElement = document.getElementById('connectionStatus');
-            
-            switch(status) {
-                case 'connected':
-                    statusElement.innerHTML = `
-                        <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm">
-                            ✅ Conectado - Dados sincronizados
-                        </span>
-                    `;
-                    break;
-                case 'error':
-                    statusElement.innerHTML = `
-                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm">
-                            ❌ Erro de conexão
-                        </span>
-                    `;
-                    break;
-                default:
-                    statusElement.innerHTML = `
-                        <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">
-                            🔄 Conectando...
-                        </span>
-                    `;
-            }
-        }
+
 
         // Função para atualizar display das rodadas
         function updateRoundsDisplay() {
@@ -602,5 +566,5 @@
         // Inicializar quando a página carregar
         window.addEventListener('load', init);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96c32e4c90d3f1e5',t:'MTc1NDY5OTgwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96c332d4c128f1e5',t:'MTc1NDY5OTk4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
