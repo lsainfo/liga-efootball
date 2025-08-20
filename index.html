@@ -106,76 +106,37 @@
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Dados dos times
+         // Dados dos times
         const teams = [
-            'Jogador 1', 'Jogador 2', 'Jogador 3', 'Jogador 4', 'Jogador 5',
-            'Jogador 6', 'Jogador 7', 'Jogador 8', 'Jogador 9', 'Jogador 10'
+            'JACARÉ__FC', 'L.S.A FC', 'MIRASSOL', 'MODELO FC', 'REAL SERTÃO FC', 'REVOADA FC'
         ];
 
         // Dados das rodadas
         const rounds = [
             [
-                ['Jogador 1', 'Jogador 10'],
-                ['Jogador 2', 'Jogador 9'],
-                ['Jogador 3', 'Jogador 8'],
-                ['Jogador 4', 'Jogador 7'],
-                ['Jogador 5', 'Jogador 6']
+                ['REVOADA FC', 'JACARÉ__FC'],
+                ['L.S.A FC', 'REAL SERTÃO FC'],
+                ['MIRASSOL', 'MODELO FC']
             ],
             [
-                ['Jogador 1', 'Jogador 9'],
-                ['Jogador 10', 'Jogador 8'],
-                ['Jogador 2', 'Jogador 7'],
-                ['Jogador 3', 'Jogador 6'],
-                ['Jogador 4', 'Jogador 5']
+                ['JACARÉ__FC', 'REAL SERTÃO FC'],
+                ['REVOADA FC', 'MODELO FC'],
+                ['L.S.A FC', 'MIRASSOL']
             ],
             [
-                ['Jogador 1', 'Jogador 8'],
-                ['Jogador 9', 'Jogador 7'],
-                ['Jogador 10', 'Jogador 6'],
-                ['Jogador 2', 'Jogador 5'],
-                ['Jogador 3', 'Jogador 4']
+                ['JACARÉ__FC', 'MODELO FC'],
+                ['REAL SERTÃO FC', 'MIRASSOL'],
+                ['REVOADA FC', 'L.S.A FC']
             ],
             [
-                ['Jogador 1', 'Jogador 7'],
-                ['Jogador 8', 'Jogador 6'],
-                ['Jogador 9', 'Jogador 5'],
-                ['Jogador 10', 'Jogador 4'],
-                ['Jogador 2', 'Jogador 3']
+                ['JACARÉ__FC', 'MIRASSOL'],
+                ['MODELO FC', 'L.S.A FC'],
+                ['REAL SERTÃO FC', 'REVOADA FC']
             ],
             [
-                ['Jogador 1', 'Jogador 6'],
-                ['Jogador 7', 'Jogador 5'],
-                ['Jogador 8', 'Jogador 4'],
-                ['Jogador 9', 'Jogador 3'],
-                ['Jogador 10', 'Jogador 2']
-            ],
-            [
-                ['Jogador 1', 'Jogador 5'],
-                ['Jogador 6', 'Jogador 4'],
-                ['Jogador 7', 'Jogador 3'],
-                ['Jogador 8', 'Jogador 2'],
-                ['Jogador 9', 'Jogador 10']
-            ],
-            [
-                ['Jogador 1', 'Jogador 4'],
-                ['Jogador 5', 'Jogador 3'],
-                ['Jogador 6', 'Jogador 2'],
-                ['Jogador 7', 'Jogador 10'],
-                ['Jogador 8', 'Jogador 9']
-            ],
-            [
-                ['Jogador 1', 'Jogador 3'],
-                ['Jogador 4', 'Jogador 2'],
-                ['Jogador 5', 'Jogador 10'],
-                ['Jogador 6', 'Jogador 9'],
-                ['Jogador 7', 'Jogador 8']
-            ],
-            [
-                ['Jogador 1', 'Jogador 2'],
-                ['Jogador 3', 'Jogador 10'],
-                ['Jogador 4', 'Jogador 9'],
-                ['Jogador 5', 'Jogador 8'],
-                ['Jogador 6', 'Jogador 7']
+                ['JACARÉ__FC', 'L.S.A FC'],
+                ['MIRASSOL', 'REVOADA FC'],
+                ['MODELO FC', 'REAL SERTÃO FC']
             ]
         ];
 
