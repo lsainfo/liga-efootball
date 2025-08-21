@@ -108,54 +108,62 @@
 
          // Dados dos times
         const teams = [
-            'CHEFÃO CL', 'FELIPINTO FC', 'JACARÉ__FC', 'L.S.A FC', 'MIRASSOL', 'MODELO FC', 'REAL SERTÃO FC', 'REVOADA FC'
-        ].sort();
+    'L.S.A FC', 'REVOADA FC', 'JACARÉ__FC', 'REAL SERTÃO FC',
+    'FELIPINTO FC', 'CHEFÃO CL', 'MODELO FC', 'MIRASSOL'
+];
 
-        // Dados das rodadas
-        const rounds = [
-            [
-                ['L.S.A FC', 'REVOADA FC'],
-                ['JACARÉ__FC', 'REAL SERTÃO FC'],
-                ['FELIPINTO FC', 'CHEFÃO CL'],
-                ['MODELO FC', 'MIRASSOL']
-            ],
-            [
-                ['L.S.A FC', 'REAL SERTÃO FC'],
-                ['REVOADA FC', 'CHEFÃO CL'],
-                ['JACARÉ__FC', 'MIRASSOL'],
-                ['FELIPINTO FC', 'MODELO FC']
-            ],
-            [
-                ['L.S.A FC', 'CHEFÃO CL'],
-                ['REAL SERTÃO FC', 'MIRASSOL'],
-                ['REVOADA FC', 'MODELO FC'],
-                ['JACARÉ__FC', 'FELIPINTO FC']
-            ],
-            [
-                ['L.S.A FC', 'MIRASSOL'],
-                ['CHEFÃO CL', 'MODELO FC'],
-                ['REAL SERTÃO FC', 'FELIPINTO FC'],
-                ['REVOADA FC', 'JACARÉ__FC']
-            ],
-            [
-                ['L.S.A FC', 'MODELO FC'],
-                ['MIRASSOL', 'FELIPINTO FC'],
-                ['CHEFÃO CL', 'JACARÉ__FC'],
-                ['REAL SERTÃO FC', 'REVOADA FC']
-            ],
-            [
-                ['L.S.A FC', 'FELIPINTO FC'],
-                ['MODELO FC', 'REAL SERTÃO FC'],
-                ['MIRASSOL', 'REVOADA FC'],
-                ['CHEFÃO CL', 'JACARÉ__FC']
-            ],
-            [
-                ['L.S.A FC', 'JACARÉ__FC'],
-                ['FELIPINTO FC', 'REVOADA FC'],
-                ['MODELO FC', 'MIRASSOL'],
-                ['REAL SERTÃO FC', 'CHEFÃO CL']
-            ]
-        ];
+// Dados das rodadas - Calendário corrigido e único
+const rounds = [
+    // Rodada 1 (mantida a original)
+    [
+        ['L.S.A FC', 'REVOADA FC'],
+        ['JACARÉ__FC', 'REAL SERTÃO FC'],
+        ['FELIPINTO FC', 'CHEFÃO CL'],
+        ['MODELO FC', 'MIRASSOL']
+    ],
+    // Rodada 2
+    [
+        ['L.S.A FC', 'REAL SERTÃO FC'],
+        ['REVOADA FC', 'CHEFÃO CL'],
+        ['JACARÉ__FC', 'MIRASSOL'],
+        ['FELIPINTO FC', 'MODELO FC']
+    ],
+    // Rodada 3
+    [
+        ['L.S.A FC', 'CHEFÃO CL'],
+        ['REAL SERTÃO FC', 'MIRASSOL'],
+        ['REVOADA FC', 'MODELO FC'],
+        ['JACARÉ__FC', 'FELIPINTO FC']
+    ],
+    // Rodada 4
+    [
+        ['L.S.A FC', 'MIRASSOL'],
+        ['CHEFÃO CL', 'MODELO FC'],
+        ['REAL SERTÃO FC', 'FELIPINTO FC'],
+        ['REVOADA FC', 'JACARÉ__FC']
+    ],
+    // Rodada 5
+    [
+        ['L.S.A FC', 'MODELO FC'],
+        ['MIRASSOL', 'FELIPINTO FC'],
+        ['CHEFÃO CL', 'JACARÉ__FC'],
+        ['REAL SERTÃO FC', 'REVOADA FC']
+    ],
+    // Rodada 6
+    [
+        ['L.S.A FC', 'FELIPINTO FC'],
+        ['MODELO FC', 'JACARÉ__FC'],
+        ['MIRASSOL', 'REVOADA FC'],
+        ['CHEFÃO CL', 'REAL SERTÃO FC']
+    ],
+    // Rodada 7
+    [
+        ['L.S.A FC', 'JACARÉ__FC'],
+        ['FELIPINTO FC', 'REVOADA FC'],
+        ['MODELO FC', 'REAL SERTÃO FC'],
+        ['MIRASSOL', 'CHEFÃO CL']
+    ]
+];
 
         // Estatísticas dos times
         let teamStats = {};
