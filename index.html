@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -25,7 +24,6 @@
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <!-- Header -->
     <div class="efootball-gradient text-white py-8 mb-8">
         <div class="container mx-auto px-4 relative">
             <div class="flex items-center justify-center space-x-4">
@@ -49,7 +47,6 @@
     </div>
 
     <div class="container mx-auto px-4 max-w-7xl">
-        <!-- Tabela de Classificação -->
         <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
             <div class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white p-6">
                 <h2 class="text-2xl font-bold flex items-center">
@@ -76,13 +73,11 @@
                         </tr>
                     </thead>
                     <tbody id="leagueTable">
-                        <!-- Tabela será preenchida pelo JavaScript -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Rodadas -->
         <div class="bg-white rounded-xl shadow-lg overflow-hidden">
             <div class="bg-gradient-to-r from-green-600 to-emerald-500 text-white p-6">
                 <h2 class="text-2xl font-bold flex items-center">
@@ -94,75 +89,96 @@
             </div>
             <div class="p-6">
                 <div id="roundsContainer" class="space-y-6">
-                    <!-- Rodadas serão preenchidas pelo JavaScript -->
+                    </div>
+            </div>
+        </div>
+
+        <div class="container mx-auto px-4 max-w-7xl mt-8">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-purple-600 to-indigo-500 text-white p-6">
+                    <h2 class="text-2xl font-bold flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l-2.4 4.8 5.2 1.04-2.8 4.6 2.4-4.8-5.2-1.04 2.8-4.6zM12 10.15l-1.92-3.84L6.96 6.8l3.68 6.08L5.6 15.6l6.4-1.28L18.4 15.6l-5.04-2.6-3.68-6.08L12 10.15z"/>
+                        </svg>
+                        Fase Eliminatória
+                    </h2>
+                </div>
+                <div class="p-6 space-y-8">
+                    <div id="semifinalsContainer" class="space-y-4">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Semifinais</h3>
+                        </div>
+                    <div id="finalContainer" class="space-y-4">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Final</h3>
+                        </div>
                 </div>
             </div>
         </div>
+
     </div>
 
     <script>
         // Configuração do Supabase
         const SUPABASE_URL = 'https://dwtvzmzooldlhrbdbesk.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3dHZ6bXpvb2xkbGhyYmRiZXNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2OTg0MTUsImV4cCI6MjA3MDI3NDQxNX0.JPmuxbZIKdtG4A7lWrH2r-pD8SMIxaBF_xLB1m7w1lo';
-        
+
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-         // Dados dos times
+        // Dados dos times
+        const teams = [
+            'CHEFÃO CL', 'FELIPINTO FC', 'JACERE__FC', 'L.S.A FC',
+            'MIRASSOL', 'MODELO FC', 'REAL SERTÃO FC', 'REVOADA FC'
+        ].sort();
 
-       const teams = [
-  'CHEFÃO CL', 'FELIPINTO FC', 'JACERE__FC', 'L.S.A FC',
-  'MIRASSOL', 'MODELO FC', 'REAL SERTÃO FC', 'REVOADA FC'
-].sort();
-// Dados das rodadas
-const rounds = [
-  [
-    ['L.S.A FC', 'REVOADA FC'],
-    ['JACERE__FC', 'REAL SERTÃO FC'],
-    ['FELIPINTO FC', 'CHEFÃO CL'],
-    ['MODELO FC', 'MIRASSOL']
-  ],
-  [
-    ['L.S.A FC', 'REAL SERTÃO FC'],
-    ['REVOADA FC', 'CHEFÃO CL'],
-    ['JACERE__FC', 'MIRASSOL'],
-    ['FELIPINTO FC', 'MODELO FC']
-  ],
-  [
-    ['L.S.A FC', 'CHEFÃO CL'],
-    ['REAL SERTÃO FC', 'MIRASSOL'],
-    ['REVOADA FC', 'MODELO FC'],
-    ['JACERE__FC', 'FELIPINTO FC']
-  ],
-  [
-    ['L.S.A FC', 'MIRASSOL'],
-    ['CHEFÃO CL', 'MODELO FC'],
-    ['REAL SERTÃO FC', 'FELIPINTO FC'],
-    ['REVOADA FC', 'JACERE__FC']
-  ],
-  [
-    ['L.S.A FC', 'MODELO FC'],
-    ['MIRASSOL', 'FELIPINTO FC'],
-    ['CHEFÃO CL', 'JACERE__FC'],
-    ['REAL SERTÃO FC', 'REVOADA FC']
-  ],
-  [
-    ['L.S.A FC', 'FELIPINTO FC'],
-    ['MODELO FC', 'JACERE__FC'],
-    ['MIRASSOL', 'REAL SERTÃO FC'],
-    ['CHEFÃO CL', 'REVOADA FC']
-  ],
-  [
-    ['L.S.A FC', 'JACERE__FC'],
-    ['FELIPINTO FC', 'REVOADA FC'],
-    ['MODELO FC', 'CHEFÃO CL'],
-    ['REAL SERTÃO FC', 'MIRASSOL']
-  ]
-];
-  
+        // Dados das rodadas
+        const rounds = [
+            [
+                ['L.S.A FC', 'REVOADA FC'],
+                ['JACERE__FC', 'REAL SERTÃO FC'],
+                ['FELIPINTO FC', 'CHEFÃO CL'],
+                ['MODELO FC', 'MIRASSOL']
+            ],
+            [
+                ['L.S.A FC', 'REAL SERTÃO FC'],
+                ['REVOADA FC', 'CHEFÃO CL'],
+                ['JACERE__FC', 'MIRASSOL'],
+                ['FELIPINTO FC', 'MODELO FC']
+            ],
+            [
+                ['L.S.A FC', 'CHEFÃO CL'],
+                ['REAL SERTÃO FC', 'MIRASSOL'],
+                ['REVOADA FC', 'MODELO FC'],
+                ['JACERE__FC', 'FELIPINTO FC']
+            ],
+            [
+                ['L.S.A FC', 'MIRASSOL'],
+                ['CHEFÃO CL', 'MODELO FC'],
+                ['REAL SERTÃO FC', 'FELIPINTO FC'],
+                ['REVOADA FC', 'JACERE__FC']
+            ],
+            [
+                ['L.S.A FC', 'MODELO FC'],
+                ['MIRASSOL', 'FELIPINTO FC'],
+                ['CHEFÃO CL', 'JACERE__FC'],
+                ['REAL SERTÃO FC', 'REVOADA FC']
+            ],
+            [
+                ['L.S.A FC', 'FELIPINTO FC'],
+                ['MODELO FC', 'JACERE__FC'],
+                ['MIRASSOL', 'REAL SERTÃO FC'],
+                ['CHEFÃO CL', 'REVOADA FC']
+            ],
+            [
+                ['L.S.A FC', 'JACERE__FC'],
+                ['FELIPINTO FC', 'REVOADA FC'],
+                ['MODELO FC', 'CHEFÃO CL'],
+                ['REAL SERTÃO FC', 'MIRASSOL']
+            ]
+        ];
 
         // Estatísticas dos times
         let teamStats = {};
         let matchesData = [];
+        let playoffsMatches = [];
 
         // Inicializar estatísticas
         function initializeStats() {
@@ -182,14 +198,14 @@ const rounds = [
         // Função para calcular estatísticas baseado nos dados do banco
         function calculateStats() {
             initializeStats();
-            
+
             matchesData.forEach(match => {
                 if (match.goals1 !== null && match.goals2 !== null) {
                     const team1 = match.team1;
                     const team2 = match.team2;
                     const goals1 = match.goals1;
                     const goals2 = match.goals2;
-                    
+
                     // Atualizar estatísticas
                     teamStats[team1].games++;
                     teamStats[team2].games++;
@@ -197,7 +213,7 @@ const rounds = [
                     teamStats[team1].goalsAgainst += goals2;
                     teamStats[team2].goalsFor += goals2;
                     teamStats[team2].goalsAgainst += goals1;
-                    
+
                     if (goals1 > goals2) {
                         teamStats[team1].wins++;
                         teamStats[team1].points += 3;
@@ -220,23 +236,23 @@ const rounds = [
         function updateTable() {
             calculateStats();
             const tableBody = document.getElementById('leagueTable');
-            
+
             // Ordenar times por pontos, depois por saldo de gols
             const sortedTeams = teams.slice().sort((a, b) => {
                 const statsA = teamStats[a];
                 const statsB = teamStats[b];
-                
+
                 if (statsB.points !== statsA.points) {
                     return statsB.points - statsA.points;
                 }
-                
+
                 const sgA = calculateGoalDifference(statsA.goalsFor, statsA.goalsAgainst);
                 const sgB = calculateGoalDifference(statsB.goalsFor, statsB.goalsAgainst);
-                
+
                 if (sgB !== sgA) {
                     return sgB - sgA;
                 }
-                
+
                 return statsB.goalsFor - statsA.goalsFor;
             });
 
@@ -245,11 +261,11 @@ const rounds = [
                 const stats = teamStats[team];
                 const goalDiff = calculateGoalDifference(stats.goalsFor, stats.goalsAgainst);
                 const position = index + 1;
-                
+
                 let positionClass = '';
                 if (position <= 4) positionClass = 'bg-green-50 border-l-4 border-green-500';
                 else if (position >= 7) positionClass = 'bg-red-50 border-l-4 border-red-500';
-                
+
                 const row = document.createElement('tr');
                 row.className = `team-row ${positionClass} hover:bg-gray-50`;
                 row.innerHTML = `
@@ -271,64 +287,74 @@ const rounds = [
         // Função para buscar dados do Supabase
         async function loadMatches() {
             try {
-                const { data, error } = await supabase
+                const { data: regularMatches, error: regularError } = await supabase
                     .from('matches')
                     .select('*')
                     .order('round', { ascending: true });
+
+                if (regularError) throw regularError;
+
+                const { data: playoffsMatchesData, error: playoffsError } = await supabase
+                    .from('knockout_matches') // Mudança aqui para 'knockout_matches'
+                    .select('*')
+                    .order('round', { ascending: true });
                 
-                if (error) throw error;
-                
-                matchesData = data || [];
+                if (playoffsError) throw playoffsError;
+
+                matchesData = regularMatches || [];
+                playoffsMatches = playoffsMatchesData || [];
+
                 updateTable();
                 updateRoundsDisplay();
+                createPlayoffs();
             } catch (error) {
                 console.error('Erro ao carregar dados:', error);
             }
         }
 
         // Função para salvar/atualizar resultado no Supabase
-        async function saveMatch(round, team1, team2, goals1, goals2) {
+        async function saveMatch(tableName, round, team1, team2, goals1, goals2) {
             try {
-                // Verificar se já existe um registro para este jogo
-                const existingMatch = matchesData.find(m => 
+                const existingMatch = (tableName === 'matches' ? matchesData : playoffsMatches).find(m =>
                     m.round === round && m.team1 === team1 && m.team2 === team2
                 );
+                
+                const goals1Int = goals1 === '' ? null : parseInt(goals1);
+                const goals2Int = goals2 === '' ? null : parseInt(goals2);
 
                 if (existingMatch) {
-                    // Atualizar registro existente
                     const { error } = await supabase
-                        .from('matches')
+                        .from(tableName)
                         .update({ 
-                            goals1: goals1 === '' ? null : parseInt(goals1),
-                            goals2: goals2 === '' ? null : parseInt(goals2)
+                            goals1: goals1Int,
+                            goals2: goals2Int,
+                            score1: goals1Int, // Adicionado para a tabela knockout_matches
+                            score2: goals2Int  // Adicionado para a tabela knockout_matches
                         })
                         .eq('id', existingMatch.id);
-                    
+
                     if (error) throw error;
                 } else {
-                    // Criar novo registro
                     const { error } = await supabase
-                        .from('matches')
+                        .from(tableName)
                         .insert([{
                             round: round,
                             team1: team1,
                             team2: team2,
-                            goals1: goals1 === '' ? null : parseInt(goals1),
-                            goals2: goals2 === '' ? null : parseInt(goals2)
+                            goals1: goals1Int, // Adicionado para a tabela matches
+                            goals2: goals2Int,  // Adicionado para a tabela matches
+                            score1: goals1Int, // Adicionado para a tabela knockout_matches
+                            score2: goals2Int  // Adicionado para a tabela knockout_matches
                         }]);
-                    
                     if (error) throw error;
                 }
-                
-                // Recarregar dados
+
                 await loadMatches();
-                
+
             } catch (error) {
                 console.error('Erro ao salvar:', error);
             }
         }
-
-
 
         // Função para atualizar display das rodadas
         function updateRoundsDisplay() {
@@ -336,23 +362,26 @@ const rounds = [
                 round.forEach((match, matchIndex) => {
                     const team1 = match[0];
                     const team2 = match[1];
-                    
+
                     // Buscar dados salvos para este jogo
                     const savedMatch = matchesData.find(m => 
                         m.round === roundIndex + 1 && m.team1 === team1 && m.team2 === team2
                     );
-                    
+
                     const goals1Input = document.getElementById(`goals_${roundIndex}_${matchIndex}_0`);
                     const goals2Input = document.getElementById(`goals_${roundIndex}_${matchIndex}_1`);
-                    
+
                     if (goals1Input && goals2Input && savedMatch) {
                         goals1Input.value = savedMatch.goals1 !== null ? savedMatch.goals1 : '';
                         goals2Input.value = savedMatch.goals2 !== null ? savedMatch.goals2 : '';
-                        
+
                         // Adicionar classe visual se o jogo foi salvo
                         if (savedMatch.goals1 !== null && savedMatch.goals2 !== null) {
                             goals1Input.classList.add('saved');
                             goals2Input.classList.add('saved');
+                        } else {
+                            goals1Input.classList.remove('saved');
+                            goals2Input.classList.remove('saved');
                         }
                     }
                 });
@@ -362,7 +391,8 @@ const rounds = [
         // Criar interface das rodadas
         function createRounds() {
             const container = document.getElementById('roundsContainer');
-            
+            container.innerHTML = '';
+
             rounds.forEach((round, roundIndex) => {
                 const roundDiv = document.createElement('div');
                 roundDiv.className = 'bg-gray-50 rounded-lg p-4';
@@ -392,8 +422,9 @@ const rounds = [
                                            min="0" 
                                            placeholder="0"
                                            data-round="${roundIndex + 1}"
+                                           data-match-type="regular"
                                            data-match="${matchIndex}"
-                                           data-team="0">
+                                           data-team-name="${match[0]}">
                                     <span class="text-gray-400 font-bold">-</span>
                                     <input type="number" 
                                            id="goals_${roundIndex}_${matchIndex}_1" 
@@ -401,8 +432,9 @@ const rounds = [
                                            min="0" 
                                            placeholder="0"
                                            data-round="${roundIndex + 1}"
+                                           data-match-type="regular"
                                            data-match="${matchIndex}"
-                                           data-team="1">
+                                           data-team-name="${match[1]}">
                                 </div>
                             </div>
                         `).join('')}
@@ -410,30 +442,157 @@ const rounds = [
                 `;
                 container.appendChild(roundDiv);
             });
-            
+
             // Adicionar event listeners
-            document.querySelectorAll('.match-input').forEach(input => {
+            document.querySelectorAll('.match-input[data-match-type="regular"]').forEach(input => {
                 let saveTimeout;
-                
+
                 input.addEventListener('input', function() {
                     const round = parseInt(this.dataset.round);
                     const match = parseInt(this.dataset.match);
-                    const team = parseInt(this.dataset.team);
-                    
+
                     const team1 = rounds[round - 1][match][0];
                     const team2 = rounds[round - 1][match][1];
-                    
+
                     const goals1Input = document.getElementById(`goals_${round - 1}_${match}_0`);
                     const goals2Input = document.getElementById(`goals_${round - 1}_${match}_1`);
-                    
+
                     // Remover classes visuais
                     goals1Input.classList.remove('saved');
                     goals2Input.classList.remove('saved');
-                    
+
                     // Debounce para evitar muitas requisições
                     clearTimeout(saveTimeout);
                     saveTimeout = setTimeout(() => {
-                        saveMatch(round, team1, team2, goals1Input.value, goals2Input.value);
+                        saveMatch('matches', round, team1, team2, goals1Input.value, goals2Input.value);
+                    }, 1000);
+                });
+            });
+        }
+
+
+        // Funções para a Fase Eliminatória
+        function getPlayoffWinner(match, round, matchType) {
+            const team1 = match[0];
+            const team2 = match[1];
+            const savedMatch = playoffsMatches.find(m => m.round === round && m.team1 === team1 && m.team2 === team2);
+            
+            if (!savedMatch || savedMatch.score1 === null || savedMatch.score2 === null) { // Mudança aqui
+                return null;
+            }
+            
+            if (savedMatch.score1 > savedMatch.score2) { // Mudança aqui
+                return team1;
+            } else if (savedMatch.score2 > savedMatch.score1) { // Mudança aqui
+                return team2;
+            } else {
+                return null;
+            }
+        }
+
+        function renderPlayoffMatch(match, round, matchIndex) {
+            const team1 = match[0];
+            const team2 = match[1];
+            const savedMatch = playoffsMatches.find(m => m.round === round && m.team1 === team1 && m.team2 === team2);
+            const goals1 = savedMatch ? (savedMatch.score1 !== null ? savedMatch.score1 : '') : ''; // Mudança aqui
+            const goals2 = savedMatch ? (savedMatch.score2 !== null ? savedMatch.score2 : '') : ''; // Mudança aqui
+            const savedClass = (goals1 !== '' && goals2 !== '') ? 'saved' : '';
+
+            const team1Name = team1 || 'Aguardando...';
+            const team2Name = team2 || 'Aguardando...';
+
+            return `
+                <div class="bg-white rounded-lg p-4 shadow-sm border">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-semibold text-gray-800 text-sm">${team1Name}</span>
+                        <span class="text-gray-500 font-bold">VS</span>
+                        <span class="font-semibold text-gray-800 text-sm">${team2Name}</span>
+                    </div>
+                    <div class="flex items-center justify-center space-x-2">
+                        <input type="number" 
+                               id="playoffs_goals_${round}_${matchIndex}_0" 
+                               class="match-input w-12 h-10 text-center border-2 border-gray-300 rounded-lg font-bold text-lg focus:border-blue-500 focus:outline-none ${savedClass}"
+                               min="0" 
+                               placeholder="0"
+                               data-round="${round}"
+                               data-match-type="playoffs"
+                               data-match-id="${matchIndex}"
+                               data-team-name="${team1}">
+                        <span class="text-gray-400 font-bold">-</span>
+                        <input type="number" 
+                               id="playoffs_goals_${round}_${matchIndex}_1" 
+                               class="match-input w-12 h-10 text-center border-2 border-gray-300 rounded-lg font-bold text-lg focus:border-blue-500 focus:outline-none ${savedClass}"
+                               min="0" 
+                               placeholder="0"
+                               data-round="${round}"
+                               data-match-type="playoffs"
+                               data-match-id="${matchIndex}"
+                               data-team-name="${team2}">
+                    </div>
+                </div>
+            `;
+        }
+
+        function createPlayoffs() {
+            // Encontra os 4 melhores times com base na tabela final
+            const sortedTeams = teams.slice().sort((a, b) => {
+                const statsA = teamStats[a];
+                const statsB = teamStats[b];
+                if (statsB.points !== statsA.points) return statsB.points - statsA.points;
+                const sgA = calculateGoalDifference(statsA.goalsFor, statsA.goalsAgainst);
+                const sgB = calculateGoalDifference(statsB.goalsFor, statsB.goalsAgainst);
+                if (sgB !== sgA) return sgB - sgA;
+                return statsB.goalsFor - statsA.goalsFor;
+            });
+
+            const classifiedTeams = sortedTeams.slice(0, 4);
+
+            const semifinals = [
+                [classifiedTeams[0], classifiedTeams[3]],
+                [classifiedTeams[1], classifiedTeams[2]]
+            ];
+
+            const semifinalsContainer = document.getElementById('semifinalsContainer');
+            semifinalsContainer.innerHTML = `
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Semifinais</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    ${renderPlayoffMatch(semifinals[0], 1, 0)}
+                    ${renderPlayoffMatch(semifinals[1], 1, 1)}
+                </div>
+            `;
+            
+            const semifinal1Winner = getPlayoffWinner(semifinals[0], 1);
+            const semifinal2Winner = getPlayoffWinner(semifinals[1], 1);
+
+            const finalContainer = document.getElementById('finalContainer');
+            if (semifinal1Winner && semifinal2Winner) {
+                finalContainer.innerHTML = `
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Final</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${renderPlayoffMatch([semifinal1Winner, semifinal2Winner], 2, 0)}
+                    </div>
+                `;
+            } else {
+                finalContainer.innerHTML = `<p class="text-gray-500">Resultados da final aparecerão após as semifinais.</p>`;
+            }
+
+            // Adicionar event listeners para os jogos eliminatórios
+            document.querySelectorAll('.match-input[data-match-type="playoffs"]').forEach(input => {
+                let saveTimeout;
+                input.addEventListener('input', function() {
+                    const round = parseInt(this.dataset.round);
+                    const matchIndex = parseInt(this.dataset.matchId);
+                    
+                    const goals1Input = document.getElementById(`playoffs_goals_${round}_${matchIndex}_0`);
+                    const goals2Input = document.getElementById(`playoffs_goals_${round}_${matchIndex}_1`);
+
+                    // Remover classes visuais
+                    goals1Input.classList.remove('saved');
+                    goals2Input.classList.remove('saved');
+
+                    clearTimeout(saveTimeout);
+                    saveTimeout = setTimeout(() => {
+                        saveMatch('knockout_matches', round, goals1Input.dataset.teamName, goals2Input.dataset.teamName, goals1Input.value, goals2Input.value); // Mudança aqui
                     }, 1000);
                 });
             });
@@ -443,21 +602,20 @@ const rounds = [
         function shareRoundResults(roundNumber) {
             const round = rounds[roundNumber - 1];
             let message = `🏆 *Liga eFootball - Rodada ${roundNumber}*\n\n`;
-            
+
             round.forEach((match, index) => {
                 const team1 = match[0];
                 const team2 = match[1];
-                
-                // Buscar dados salvos
+
                 const savedMatch = matchesData.find(m => 
                     m.round === roundNumber && m.team1 === team1 && m.team2 === team2
                 );
-                
+
                 if (savedMatch && savedMatch.goals1 !== null && savedMatch.goals2 !== null) {
                     const goals1 = savedMatch.goals1;
                     const goals2 = savedMatch.goals2;
                     let result = '';
-                    
+
                     if (goals1 > goals2) {
                         result = '🟢';
                     } else if (goals1 < goals2) {
@@ -465,15 +623,15 @@ const rounds = [
                     } else {
                         result = '🟡';
                     }
-                    
+
                     message += `${result} ${team1} ${goals1} x ${goals2} ${team2}\n`;
                 } else {
                     message += `⚪ ${team1} - x - ${team2}\n`;
                 }
             });
-            
+
             message += `\n📊 Acompanhe a classificação completa: ${window.location.href}`;
-            
+
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
         }
@@ -481,43 +639,42 @@ const rounds = [
         // Função para compartilhar classificação
         function shareLeague() {
             calculateStats();
-            
-            // Ordenar times para classificação
+
             const sortedTeams = teams.slice().sort((a, b) => {
                 const statsA = teamStats[a];
                 const statsB = teamStats[b];
-                
+
                 if (statsB.points !== statsA.points) {
                     return statsB.points - statsA.points;
                 }
-                
+
                 const sgA = calculateGoalDifference(statsA.goalsFor, statsA.goalsAgainst);
                 const sgB = calculateGoalDifference(statsB.goalsFor, statsB.goalsAgainst);
-                
+
                 if (sgB !== sgA) {
                     return sgB - sgA;
                 }
-                
+
                 return statsB.goalsFor - statsA.goalsFor;
             });
 
             let message = `🏆 *Liga eFootball - Classificação*\n\n`;
-            
+
             sortedTeams.forEach((team, index) => {
                 const stats = teamStats[team];
                 const goalDiff = calculateGoalDifference(stats.goalsFor, stats.goalsAgainst);
                 const position = index + 1;
-                
+
                 let emoji = '';
                 if (position <= 4) emoji = '🟢';
                 else if (position >= 7) emoji = '🔴';
                 else emoji = '🟡';
-                
+
                 message += `${emoji} ${position}º ${team} - ${stats.points}pts (${stats.games}j)\n`;
             });
-            
+
             message += `\n📊 Acompanhe todos os resultados: ${window.location.href}`;
-            
+
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
         }
@@ -529,8 +686,15 @@ const rounds = [
                 .on('postgres_changes', 
                     { event: '*', schema: 'public', table: 'matches' },
                     (payload) => {
-                        console.log('Dados atualizados!', payload);
-                        loadMatches(); // Recarregar dados quando houver mudanças
+                        console.log('Dados da fase de grupos atualizados!');
+                        loadMatches();
+                    }
+                )
+                .on('postgres_changes', 
+                    { event: '*', schema: 'public', table: 'knockout_matches' }, // Mudança aqui para 'knockout_matches'
+                    (payload) => {
+                        console.log('Dados da fase eliminatória atualizados!');
+                        loadMatches();
                     }
                 )
                 .subscribe();
@@ -547,8 +711,5 @@ const rounds = [
         // Inicializar quando a página carregar
         window.addEventListener('load', init);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96c332d4c128f1e5',t:'MTc1NDY5OTk4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
-
-
-
