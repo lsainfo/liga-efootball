@@ -78,7 +78,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div id="roundsSection" class="bg-white rounded-xl shadow-lg overflow-hidden">
             <div class="bg-gradient-to-r from-green-600 to-emerald-500 text-white p-6">
                 <h2 class="text-2xl font-bold flex items-center">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -93,7 +93,7 @@
             </div>
         </div>
 
-        <div class="container mx-auto px-4 max-w-7xl mt-8">
+        <div id="playoffsSection" class="hidden container mx-auto px-4 max-w-7xl mt-8">
             <div class="bg-white rounded-xl shadow-lg overflow-hidden">
                 <div class="bg-gradient-to-r from-purple-600 to-indigo-500 text-white p-6">
                     <h2 class="text-2xl font-bold flex items-center">
@@ -284,6 +284,13 @@
             });
         }
 
+        // Função para verificar se todos os jogos da fase de grupos foram jogados
+        function isGroupStageComplete() {
+            const totalMatches = rounds.flat().length;
+            const playedMatches = matchesData.filter(m => m.goals1 !== null && m.goals2 !== null).length;
+            return playedMatches === totalMatches;
+        }
+
         // Função para buscar dados do Supabase
         async function loadMatches() {
             try {
@@ -295,7 +302,7 @@
                 if (regularError) throw regularError;
 
                 const { data: playoffsMatchesData, error: playoffsError } = await supabase
-                    .from('knockout_matches') // Mudança aqui para 'knockout_matches'
+                    .from('knockout_matches')
                     .select('*')
                     .order('round', { ascending: true });
                 
@@ -306,7 +313,16 @@
 
                 updateTable();
                 updateRoundsDisplay();
-                createPlayoffs();
+                
+                // Lógica para mostrar/esconder a fase eliminatória
+                const playoffsSection = document.getElementById('playoffsSection');
+                if (isGroupStageComplete()) {
+                    playoffsSection.classList.remove('hidden');
+                    createPlayoffs();
+                } else {
+                    playoffsSection.classList.add('hidden');
+                }
+
             } catch (error) {
                 console.error('Erro ao carregar dados:', error);
             }
@@ -326,10 +342,10 @@
                     const { error } = await supabase
                         .from(tableName)
                         .update({ 
-                            goals1: goals1Int,
-                            goals2: goals2Int,
-                            score1: goals1Int, // Adicionado para a tabela knockout_matches
-                            score2: goals2Int  // Adicionado para a tabela knockout_matches
+                            goals1: (tableName === 'matches' ? goals1Int : null),
+                            goals2: (tableName === 'matches' ? goals2Int : null),
+                            score1: (tableName === 'knockout_matches' ? goals1Int : null),
+                            score2: (tableName === 'knockout_matches' ? goals2Int : null)
                         })
                         .eq('id', existingMatch.id);
 
@@ -341,10 +357,10 @@
                             round: round,
                             team1: team1,
                             team2: team2,
-                            goals1: goals1Int, // Adicionado para a tabela matches
-                            goals2: goals2Int,  // Adicionado para a tabela matches
-                            score1: goals1Int, // Adicionado para a tabela knockout_matches
-                            score2: goals2Int  // Adicionado para a tabela knockout_matches
+                            goals1: (tableName === 'matches' ? goals1Int : null),
+                            goals2: (tableName === 'matches' ? goals2Int : null),
+                            score1: (tableName === 'knockout_matches' ? goals1Int : null),
+                            score2: (tableName === 'knockout_matches' ? goals2Int : null)
                         }]);
                     if (error) throw error;
                 }
@@ -472,18 +488,18 @@
 
 
         // Funções para a Fase Eliminatória
-        function getPlayoffWinner(match, round, matchType) {
+        function getPlayoffWinner(match, round) {
             const team1 = match[0];
             const team2 = match[1];
             const savedMatch = playoffsMatches.find(m => m.round === round && m.team1 === team1 && m.team2 === team2);
             
-            if (!savedMatch || savedMatch.score1 === null || savedMatch.score2 === null) { // Mudança aqui
+            if (!savedMatch || savedMatch.score1 === null || savedMatch.score2 === null) {
                 return null;
             }
             
-            if (savedMatch.score1 > savedMatch.score2) { // Mudança aqui
+            if (savedMatch.score1 > savedMatch.score2) {
                 return team1;
-            } else if (savedMatch.score2 > savedMatch.score1) { // Mudança aqui
+            } else if (savedMatch.score2 > savedMatch.score1) {
                 return team2;
             } else {
                 return null;
@@ -494,8 +510,8 @@
             const team1 = match[0];
             const team2 = match[1];
             const savedMatch = playoffsMatches.find(m => m.round === round && m.team1 === team1 && m.team2 === team2);
-            const goals1 = savedMatch ? (savedMatch.score1 !== null ? savedMatch.score1 : '') : ''; // Mudança aqui
-            const goals2 = savedMatch ? (savedMatch.score2 !== null ? savedMatch.score2 : '') : ''; // Mudança aqui
+            const goals1 = savedMatch ? (savedMatch.score1 !== null ? savedMatch.score1 : '') : '';
+            const goals2 = savedMatch ? (savedMatch.score2 !== null ? savedMatch.score2 : '') : '';
             const savedClass = (goals1 !== '' && goals2 !== '') ? 'saved' : '';
 
             const team1Name = team1 || 'Aguardando...';
@@ -592,7 +608,7 @@
 
                     clearTimeout(saveTimeout);
                     saveTimeout = setTimeout(() => {
-                        saveMatch('knockout_matches', round, goals1Input.dataset.teamName, goals2Input.dataset.teamName, goals1Input.value, goals2Input.value); // Mudança aqui
+                        saveMatch('knockout_matches', round, goals1Input.dataset.teamName, goals2Input.dataset.teamName, goals1Input.value, goals2Input.value);
                     }, 1000);
                 });
             });
@@ -691,7 +707,7 @@
                     }
                 )
                 .on('postgres_changes', 
-                    { event: '*', schema: 'public', table: 'knockout_matches' }, // Mudança aqui para 'knockout_matches'
+                    { event: '*', schema: 'public', table: 'knockout_matches' },
                     (payload) => {
                         console.log('Dados da fase eliminatória atualizados!');
                         loadMatches();
