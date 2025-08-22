@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -24,6 +25,7 @@
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
     <div class="efootball-gradient text-white py-8 mb-8">
         <div class="container mx-auto px-4 relative">
             <div class="flex items-center justify-center space-x-4">
@@ -47,6 +49,7 @@
     </div>
 
     <div class="container mx-auto px-4 max-w-7xl">
+        <!-- Tabela de Classificação -->
         <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
             <div class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white p-6">
                 <h2 class="text-2xl font-bold flex items-center">
@@ -73,12 +76,14 @@
                         </tr>
                     </thead>
                     <tbody id="leagueTable">
-                        </tbody>
+                        <!-- Tabela será preenchida pelo JavaScript -->
+                    </tbody>
                 </table>
             </div>
         </div>
 
-        <div id="roundsSection" class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Rodadas -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
             <div class="bg-gradient-to-r from-green-600 to-emerald-500 text-white p-6">
                 <h2 class="text-2xl font-bold flex items-center">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -89,96 +94,75 @@
             </div>
             <div class="p-6">
                 <div id="roundsContainer" class="space-y-6">
-                    </div>
-            </div>
-        </div>
-
-        <div id="playoffsSection" class="hidden container mx-auto px-4 max-w-7xl mt-8">
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                <div class="bg-gradient-to-r from-purple-600 to-indigo-500 text-white p-6">
-                    <h2 class="text-2xl font-bold flex items-center">
-                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2l-2.4 4.8 5.2 1.04-2.8 4.6 2.4-4.8-5.2-1.04 2.8-4.6zM12 10.15l-1.92-3.84L6.96 6.8l3.68 6.08L5.6 15.6l6.4-1.28L18.4 15.6l-5.04-2.6-3.68-6.08L12 10.15z"/>
-                        </svg>
-                        Fase Eliminatória
-                    </h2>
-                </div>
-                <div class="p-6 space-y-8">
-                    <div id="semifinalsContainer" class="space-y-4">
-                        <h3 class="text-xl font-bold text-gray-800 mb-4">Semifinais</h3>
-                        </div>
-                    <div id="finalContainer" class="space-y-4">
-                        <h3 class="text-xl font-bold text-gray-800 mb-4">Final</h3>
-                        </div>
+                    <!-- Rodadas serão preenchidas pelo JavaScript -->
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
         // Configuração do Supabase
         const SUPABASE_URL = 'https://dwtvzmzooldlhrbdbesk.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3dHZ6bXpvb2xkbGhyYmRiZXNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2OTg0MTUsImV4cCI6MjA3MDI3NDQxNX0.JPmuxbZIKdtG4A7lWrH2r-pD8SMIxaBF_xLB1m7w1lo';
-
+        
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Dados dos times
-        const teams = [
-            'CHEFÃO CL', 'FELIPINTO FC', 'JACERE__FC', 'L.S.A FC',
-            'MIRASSOL', 'MODELO FC', 'REAL SERTÃO FC', 'REVOADA FC'
-        ].sort();
+         // Dados dos times
 
-        // Dados das rodadas
-        const rounds = [
-            [
-                ['L.S.A FC', 'REVOADA FC'],
-                ['JACERE__FC', 'REAL SERTÃO FC'],
-                ['FELIPINTO FC', 'CHEFÃO CL'],
-                ['MODELO FC', 'MIRASSOL']
-            ],
-            [
-                ['L.S.A FC', 'REAL SERTÃO FC'],
-                ['REVOADA FC', 'CHEFÃO CL'],
-                ['JACERE__FC', 'MIRASSOL'],
-                ['FELIPINTO FC', 'MODELO FC']
-            ],
-            [
-                ['L.S.A FC', 'CHEFÃO CL'],
-                ['REAL SERTÃO FC', 'MIRASSOL'],
-                ['REVOADA FC', 'MODELO FC'],
-                ['JACERE__FC', 'FELIPINTO FC']
-            ],
-            [
-                ['L.S.A FC', 'MIRASSOL'],
-                ['CHEFÃO CL', 'MODELO FC'],
-                ['REAL SERTÃO FC', 'FELIPINTO FC'],
-                ['REVOADA FC', 'JACERE__FC']
-            ],
-            [
-                ['L.S.A FC', 'MODELO FC'],
-                ['MIRASSOL', 'FELIPINTO FC'],
-                ['CHEFÃO CL', 'JACERE__FC'],
-                ['REAL SERTÃO FC', 'REVOADA FC']
-            ],
-            [
-                ['L.S.A FC', 'FELIPINTO FC'],
-                ['MODELO FC', 'JACERE__FC'],
-                ['MIRASSOL', 'REAL SERTÃO FC'],
-                ['CHEFÃO CL', 'REVOADA FC']
-            ],
-            [
-                ['L.S.A FC', 'JACERE__FC'],
-                ['FELIPINTO FC', 'REVOADA FC'],
-                ['MODELO FC', 'CHEFÃO CL'],
-                ['REAL SERTÃO FC', 'MIRASSOL']
-            ]
-        ];
+       const teams = [
+  'CHEFÃO CL', 'FELIPINTO FC', 'JACERE__FC', 'L.S.A FC',
+  'MIRASSOL', 'MODELO FC', 'REAL SERTÃO FC', 'REVOADA FC'
+].sort();
+// Dados das rodadas
+const rounds = [
+  [
+    ['L.S.A FC', 'REVOADA FC'],
+    ['JACERE__FC', 'REAL SERTÃO FC'],
+    ['FELIPINTO FC', 'CHEFÃO CL'],
+    ['MODELO FC', 'MIRASSOL']
+  ],
+  [
+    ['L.S.A FC', 'REAL SERTÃO FC'],
+    ['REVOADA FC', 'CHEFÃO CL'],
+    ['JACERE__FC', 'MIRASSOL'],
+    ['FELIPINTO FC', 'MODELO FC']
+  ],
+  [
+    ['L.S.A FC', 'CHEFÃO CL'],
+    ['REAL SERTÃO FC', 'MIRASSOL'],
+    ['REVOADA FC', 'MODELO FC'],
+    ['JACERE__FC', 'FELIPINTO FC']
+  ],
+  [
+    ['L.S.A FC', 'MIRASSOL'],
+    ['CHEFÃO CL', 'MODELO FC'],
+    ['REAL SERTÃO FC', 'FELIPINTO FC'],
+    ['REVOADA FC', 'JACERE__FC']
+  ],
+  [
+    ['L.S.A FC', 'MODELO FC'],
+    ['MIRASSOL', 'FELIPINTO FC'],
+    ['CHEFÃO CL', 'JACERE__FC'],
+    ['REAL SERTÃO FC', 'REVOADA FC']
+  ],
+  [
+    ['L.S.A FC', 'FELIPINTO FC'],
+    ['MODELO FC', 'JACERE__FC'],
+    ['MIRASSOL', 'REAL SERTÃO FC'],
+    ['CHEFÃO CL', 'REVOADA FC']
+  ],
+  [
+    ['L.S.A FC', 'JACERE__FC'],
+    ['FELIPINTO FC', 'REVOADA FC'],
+    ['MODELO FC', 'CHEFÃO CL'],
+    ['REAL SERTÃO FC', 'MIRASSOL']
+  ]
+];
+  
 
         // Estatísticas dos times
         let teamStats = {};
         let matchesData = [];
-        let playoffsMatches = [];
 
         // Inicializar estatísticas
         function initializeStats() {
@@ -198,14 +182,14 @@
         // Função para calcular estatísticas baseado nos dados do banco
         function calculateStats() {
             initializeStats();
-
+            
             matchesData.forEach(match => {
                 if (match.goals1 !== null && match.goals2 !== null) {
                     const team1 = match.team1;
                     const team2 = match.team2;
                     const goals1 = match.goals1;
                     const goals2 = match.goals2;
-
+                    
                     // Atualizar estatísticas
                     teamStats[team1].games++;
                     teamStats[team2].games++;
@@ -213,7 +197,7 @@
                     teamStats[team1].goalsAgainst += goals2;
                     teamStats[team2].goalsFor += goals2;
                     teamStats[team2].goalsAgainst += goals1;
-
+                    
                     if (goals1 > goals2) {
                         teamStats[team1].wins++;
                         teamStats[team1].points += 3;
@@ -236,23 +220,23 @@
         function updateTable() {
             calculateStats();
             const tableBody = document.getElementById('leagueTable');
-
+            
             // Ordenar times por pontos, depois por saldo de gols
             const sortedTeams = teams.slice().sort((a, b) => {
                 const statsA = teamStats[a];
                 const statsB = teamStats[b];
-
+                
                 if (statsB.points !== statsA.points) {
                     return statsB.points - statsA.points;
                 }
-
+                
                 const sgA = calculateGoalDifference(statsA.goalsFor, statsA.goalsAgainst);
                 const sgB = calculateGoalDifference(statsB.goalsFor, statsB.goalsAgainst);
-
+                
                 if (sgB !== sgA) {
                     return sgB - sgA;
                 }
-
+                
                 return statsB.goalsFor - statsA.goalsFor;
             });
 
@@ -261,11 +245,11 @@
                 const stats = teamStats[team];
                 const goalDiff = calculateGoalDifference(stats.goalsFor, stats.goalsAgainst);
                 const position = index + 1;
-
+                
                 let positionClass = '';
                 if (position <= 4) positionClass = 'bg-green-50 border-l-4 border-green-500';
                 else if (position >= 7) positionClass = 'bg-red-50 border-l-4 border-red-500';
-
+                
                 const row = document.createElement('tr');
                 row.className = `team-row ${positionClass} hover:bg-gray-50`;
                 row.innerHTML = `
@@ -284,94 +268,67 @@
             });
         }
 
-        // Função para verificar se todos os jogos da fase de grupos foram jogados
-        function isGroupStageComplete() {
-            const totalMatches = rounds.flat().length;
-            const playedMatches = matchesData.filter(m => m.goals1 !== null && m.goals2 !== null).length;
-            return playedMatches === totalMatches;
-        }
-
         // Função para buscar dados do Supabase
         async function loadMatches() {
             try {
-                const { data: regularMatches, error: regularError } = await supabase
+                const { data, error } = await supabase
                     .from('matches')
                     .select('*')
                     .order('round', { ascending: true });
-
-                if (regularError) throw regularError;
-
-                const { data: playoffsMatchesData, error: playoffsError } = await supabase
-                    .from('knockout_matches')
-                    .select('*')
-                    .order('round', { ascending: true });
                 
-                if (playoffsError) throw playoffsError;
-
-                matchesData = regularMatches || [];
-                playoffsMatches = playoffsMatchesData || [];
-
+                if (error) throw error;
+                
+                matchesData = data || [];
                 updateTable();
                 updateRoundsDisplay();
-                
-                // Lógica para mostrar/esconder a fase eliminatória
-                const playoffsSection = document.getElementById('playoffsSection');
-                if (isGroupStageComplete()) {
-                    playoffsSection.classList.remove('hidden');
-                    createPlayoffs();
-                } else {
-                    playoffsSection.classList.add('hidden');
-                }
-
             } catch (error) {
-                console.error('Erro ao carregar dados:', error.message);
+                console.error('Erro ao carregar dados:', error);
             }
         }
 
         // Função para salvar/atualizar resultado no Supabase
-        async function saveMatch(tableName, round, team1, team2, goals1, goals2) {
+        async function saveMatch(round, team1, team2, goals1, goals2) {
             try {
-                const existingMatch = (tableName === 'matches' ? matchesData : playoffsMatches).find(m =>
+                // Verificar se já existe um registro para este jogo
+                const existingMatch = matchesData.find(m => 
                     m.round === round && m.team1 === team1 && m.team2 === team2
                 );
-                
-                const goals1Int = goals1 === '' ? null : parseInt(goals1);
-                const goals2Int = goals2 === '' ? null : parseInt(goals2);
-
-                const dataToSave = {};
-                if (tableName === 'matches') {
-                    dataToSave.goals1 = goals1Int;
-                    dataToSave.goals2 = goals2Int;
-                } else if (tableName === 'knockout_matches') {
-                    dataToSave.score1 = goals1Int;
-                    dataToSave.score2 = goals2Int;
-                }
 
                 if (existingMatch) {
+                    // Atualizar registro existente
                     const { error } = await supabase
-                        .from(tableName)
-                        .update(dataToSave)
+                        .from('matches')
+                        .update({ 
+                            goals1: goals1 === '' ? null : parseInt(goals1),
+                            goals2: goals2 === '' ? null : parseInt(goals2)
+                        })
                         .eq('id', existingMatch.id);
-
+                    
                     if (error) throw error;
                 } else {
+                    // Criar novo registro
                     const { error } = await supabase
-                        .from(tableName)
+                        .from('matches')
                         .insert([{
                             round: round,
                             team1: team1,
                             team2: team2,
-                            ...dataToSave
+                            goals1: goals1 === '' ? null : parseInt(goals1),
+                            goals2: goals2 === '' ? null : parseInt(goals2)
                         }]);
+                    
                     if (error) throw error;
                 }
-
+                
+                // Recarregar dados
                 await loadMatches();
-
+                
             } catch (error) {
-                console.error('Erro ao salvar:', error.message);
+                console.error('Erro ao salvar:', error);
             }
         }
+
+
 
         // Função para atualizar display das rodadas
         function updateRoundsDisplay() {
@@ -379,26 +336,23 @@
                 round.forEach((match, matchIndex) => {
                     const team1 = match[0];
                     const team2 = match[1];
-
+                    
                     // Buscar dados salvos para este jogo
                     const savedMatch = matchesData.find(m => 
                         m.round === roundIndex + 1 && m.team1 === team1 && m.team2 === team2
                     );
-
+                    
                     const goals1Input = document.getElementById(`goals_${roundIndex}_${matchIndex}_0`);
                     const goals2Input = document.getElementById(`goals_${roundIndex}_${matchIndex}_1`);
-
+                    
                     if (goals1Input && goals2Input && savedMatch) {
                         goals1Input.value = savedMatch.goals1 !== null ? savedMatch.goals1 : '';
                         goals2Input.value = savedMatch.goals2 !== null ? savedMatch.goals2 : '';
-
+                        
                         // Adicionar classe visual se o jogo foi salvo
                         if (savedMatch.goals1 !== null && savedMatch.goals2 !== null) {
                             goals1Input.classList.add('saved');
                             goals2Input.classList.add('saved');
-                        } else {
-                            goals1Input.classList.remove('saved');
-                            goals2Input.classList.remove('saved');
                         }
                     }
                 });
@@ -408,12 +362,192 @@
         // Criar interface das rodadas
         function createRounds() {
             const container = document.getElementById('roundsContainer');
-            container.innerHTML = '';
-
+            
             rounds.forEach((round, roundIndex) => {
                 const roundDiv = document.createElement('div');
                 roundDiv.className = 'bg-gray-50 rounded-lg p-4';
                 roundDiv.innerHTML = `
                     <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center justify-between">
                         <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm mr-3">Rodada ${roundIndex + 1}</span>
-                        <button onclick="shareRoundResults(${roundIndex + 1})" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition
+                        <button onclick="shareRoundResults(${roundIndex + 1})" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.700"/>
+                            </svg>
+                            <span>Compartilhar</span>
+                        </button>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        ${round.map((match, matchIndex) => `
+                            <div class="bg-white rounded-lg p-4 shadow-sm border">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="font-semibold text-gray-800 text-sm">${match[0]}</span>
+                                    <span class="text-gray-500 font-bold">VS</span>
+                                    <span class="font-semibold text-gray-800 text-sm">${match[1]}</span>
+                                </div>
+                                <div class="flex items-center justify-center space-x-2">
+                                    <input type="number" 
+                                           id="goals_${roundIndex}_${matchIndex}_0" 
+                                           class="match-input w-12 h-10 text-center border-2 border-gray-300 rounded-lg font-bold text-lg focus:border-blue-500 focus:outline-none"
+                                           min="0" 
+                                           placeholder="0"
+                                           data-round="${roundIndex + 1}"
+                                           data-match="${matchIndex}"
+                                           data-team="0">
+                                    <span class="text-gray-400 font-bold">-</span>
+                                    <input type="number" 
+                                           id="goals_${roundIndex}_${matchIndex}_1" 
+                                           class="match-input w-12 h-10 text-center border-2 border-gray-300 rounded-lg font-bold text-lg focus:border-blue-500 focus:outline-none"
+                                           min="0" 
+                                           placeholder="0"
+                                           data-round="${roundIndex + 1}"
+                                           data-match="${matchIndex}"
+                                           data-team="1">
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(roundDiv);
+            });
+            
+            // Adicionar event listeners
+            document.querySelectorAll('.match-input').forEach(input => {
+                let saveTimeout;
+                
+                input.addEventListener('input', function() {
+                    const round = parseInt(this.dataset.round);
+                    const match = parseInt(this.dataset.match);
+                    const team = parseInt(this.dataset.team);
+                    
+                    const team1 = rounds[round - 1][match][0];
+                    const team2 = rounds[round - 1][match][1];
+                    
+                    const goals1Input = document.getElementById(`goals_${round - 1}_${match}_0`);
+                    const goals2Input = document.getElementById(`goals_${round - 1}_${match}_1`);
+                    
+                    // Remover classes visuais
+                    goals1Input.classList.remove('saved');
+                    goals2Input.classList.remove('saved');
+                    
+                    // Debounce para evitar muitas requisições
+                    clearTimeout(saveTimeout);
+                    saveTimeout = setTimeout(() => {
+                        saveMatch(round, team1, team2, goals1Input.value, goals2Input.value);
+                    }, 1000);
+                });
+            });
+        }
+
+        // Função para compartilhar resultados da rodada
+        function shareRoundResults(roundNumber) {
+            const round = rounds[roundNumber - 1];
+            let message = `🏆 *Liga eFootball - Rodada ${roundNumber}*\n\n`;
+            
+            round.forEach((match, index) => {
+                const team1 = match[0];
+                const team2 = match[1];
+                
+                // Buscar dados salvos
+                const savedMatch = matchesData.find(m => 
+                    m.round === roundNumber && m.team1 === team1 && m.team2 === team2
+                );
+                
+                if (savedMatch && savedMatch.goals1 !== null && savedMatch.goals2 !== null) {
+                    const goals1 = savedMatch.goals1;
+                    const goals2 = savedMatch.goals2;
+                    let result = '';
+                    
+                    if (goals1 > goals2) {
+                        result = '🟢';
+                    } else if (goals1 < goals2) {
+                        result = '🔴';
+                    } else {
+                        result = '🟡';
+                    }
+                    
+                    message += `${result} ${team1} ${goals1} x ${goals2} ${team2}\n`;
+                } else {
+                    message += `⚪ ${team1} - x - ${team2}\n`;
+                }
+            });
+            
+            message += `\n📊 Acompanhe a classificação completa: ${window.location.href}`;
+            
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Função para compartilhar classificação
+        function shareLeague() {
+            calculateStats();
+            
+            // Ordenar times para classificação
+            const sortedTeams = teams.slice().sort((a, b) => {
+                const statsA = teamStats[a];
+                const statsB = teamStats[b];
+                
+                if (statsB.points !== statsA.points) {
+                    return statsB.points - statsA.points;
+                }
+                
+                const sgA = calculateGoalDifference(statsA.goalsFor, statsA.goalsAgainst);
+                const sgB = calculateGoalDifference(statsB.goalsFor, statsB.goalsAgainst);
+                
+                if (sgB !== sgA) {
+                    return sgB - sgA;
+                }
+                
+                return statsB.goalsFor - statsA.goalsFor;
+            });
+
+            let message = `🏆 *Liga eFootball - Classificação*\n\n`;
+            
+            sortedTeams.forEach((team, index) => {
+                const stats = teamStats[team];
+                const goalDiff = calculateGoalDifference(stats.goalsFor, stats.goalsAgainst);
+                const position = index + 1;
+                
+                let emoji = '';
+                if (position <= 4) emoji = '🟢';
+                else if (position >= 7) emoji = '🔴';
+                else emoji = '🟡';
+                
+                message += `${emoji} ${position}º ${team} - ${stats.points}pts (${stats.games}j)\n`;
+            });
+            
+            message += `\n📊 Acompanhe todos os resultados: ${window.location.href}`;
+            
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Configurar sincronização em tempo real
+        function setupRealTimeSync() {
+            const channel = supabase
+                .channel('matches_changes')
+                .on('postgres_changes', 
+                    { event: '*', schema: 'public', table: 'matches' },
+                    (payload) => {
+                        console.log('Dados atualizados!', payload);
+                        loadMatches(); // Recarregar dados quando houver mudanças
+                    }
+                )
+                .subscribe();
+        }
+
+        // Inicializar aplicação
+        async function init() {
+            initializeStats();
+            createRounds();
+            await loadMatches();
+            setupRealTimeSync();
+        }
+
+        // Inicializar quando a página carregar
+        window.addEventListener('load', init);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96c332d4c128f1e5',t:'MTc1NDY5OTk4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
+
