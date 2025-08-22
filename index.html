@@ -324,7 +324,7 @@
                 }
 
             } catch (error) {
-                console.error('Erro ao carregar dados:', error);
+                console.error('Erro ao carregar dados:', error.message);
             }
         }
 
@@ -338,15 +338,19 @@
                 const goals1Int = goals1 === '' ? null : parseInt(goals1);
                 const goals2Int = goals2 === '' ? null : parseInt(goals2);
 
+                const dataToSave = {};
+                if (tableName === 'matches') {
+                    dataToSave.goals1 = goals1Int;
+                    dataToSave.goals2 = goals2Int;
+                } else if (tableName === 'knockout_matches') {
+                    dataToSave.score1 = goals1Int;
+                    dataToSave.score2 = goals2Int;
+                }
+
                 if (existingMatch) {
                     const { error } = await supabase
                         .from(tableName)
-                        .update({ 
-                            goals1: (tableName === 'matches' ? goals1Int : null),
-                            goals2: (tableName === 'matches' ? goals2Int : null),
-                            score1: (tableName === 'knockout_matches' ? goals1Int : null),
-                            score2: (tableName === 'knockout_matches' ? goals2Int : null)
-                        })
+                        .update(dataToSave)
                         .eq('id', existingMatch.id);
 
                     if (error) throw error;
@@ -357,10 +361,7 @@
                             round: round,
                             team1: team1,
                             team2: team2,
-                            goals1: (tableName === 'matches' ? goals1Int : null),
-                            goals2: (tableName === 'matches' ? goals2Int : null),
-                            score1: (tableName === 'knockout_matches' ? goals1Int : null),
-                            score2: (tableName === 'knockout_matches' ? goals2Int : null)
+                            ...dataToSave
                         }]);
                     if (error) throw error;
                 }
@@ -368,7 +369,7 @@
                 await loadMatches();
 
             } catch (error) {
-                console.error('Erro ao salvar:', error);
+                console.error('Erro ao salvar:', error.message);
             }
         }
 
@@ -415,317 +416,4 @@
                 roundDiv.innerHTML = `
                     <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center justify-between">
                         <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm mr-3">Rodada ${roundIndex + 1}</span>
-                        <button onclick="shareRoundResults(${roundIndex + 1})" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.700"/>
-                            </svg>
-                            <span>Compartilhar</span>
-                        </button>
-                    </h3>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        ${round.map((match, matchIndex) => `
-                            <div class="bg-white rounded-lg p-4 shadow-sm border">
-                                <div class="flex items-center justify-between mb-3">
-                                    <span class="font-semibold text-gray-800 text-sm">${match[0]}</span>
-                                    <span class="text-gray-500 font-bold">VS</span>
-                                    <span class="font-semibold text-gray-800 text-sm">${match[1]}</span>
-                                </div>
-                                <div class="flex items-center justify-center space-x-2">
-                                    <input type="number" 
-                                           id="goals_${roundIndex}_${matchIndex}_0" 
-                                           class="match-input w-12 h-10 text-center border-2 border-gray-300 rounded-lg font-bold text-lg focus:border-blue-500 focus:outline-none"
-                                           min="0" 
-                                           placeholder="0"
-                                           data-round="${roundIndex + 1}"
-                                           data-match-type="regular"
-                                           data-match="${matchIndex}"
-                                           data-team-name="${match[0]}">
-                                    <span class="text-gray-400 font-bold">-</span>
-                                    <input type="number" 
-                                           id="goals_${roundIndex}_${matchIndex}_1" 
-                                           class="match-input w-12 h-10 text-center border-2 border-gray-300 rounded-lg font-bold text-lg focus:border-blue-500 focus:outline-none"
-                                           min="0" 
-                                           placeholder="0"
-                                           data-round="${roundIndex + 1}"
-                                           data-match-type="regular"
-                                           data-match="${matchIndex}"
-                                           data-team-name="${match[1]}">
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                container.appendChild(roundDiv);
-            });
-
-            // Adicionar event listeners
-            document.querySelectorAll('.match-input[data-match-type="regular"]').forEach(input => {
-                let saveTimeout;
-
-                input.addEventListener('input', function() {
-                    const round = parseInt(this.dataset.round);
-                    const match = parseInt(this.dataset.match);
-
-                    const team1 = rounds[round - 1][match][0];
-                    const team2 = rounds[round - 1][match][1];
-
-                    const goals1Input = document.getElementById(`goals_${round - 1}_${match}_0`);
-                    const goals2Input = document.getElementById(`goals_${round - 1}_${match}_1`);
-
-                    // Remover classes visuais
-                    goals1Input.classList.remove('saved');
-                    goals2Input.classList.remove('saved');
-
-                    // Debounce para evitar muitas requisições
-                    clearTimeout(saveTimeout);
-                    saveTimeout = setTimeout(() => {
-                        saveMatch('matches', round, team1, team2, goals1Input.value, goals2Input.value);
-                    }, 1000);
-                });
-            });
-        }
-
-
-        // Funções para a Fase Eliminatória
-        function getPlayoffWinner(match, round) {
-            const team1 = match[0];
-            const team2 = match[1];
-            const savedMatch = playoffsMatches.find(m => m.round === round && m.team1 === team1 && m.team2 === team2);
-            
-            if (!savedMatch || savedMatch.score1 === null || savedMatch.score2 === null) {
-                return null;
-            }
-            
-            if (savedMatch.score1 > savedMatch.score2) {
-                return team1;
-            } else if (savedMatch.score2 > savedMatch.score1) {
-                return team2;
-            } else {
-                return null;
-            }
-        }
-
-        function renderPlayoffMatch(match, round, matchIndex) {
-            const team1 = match[0];
-            const team2 = match[1];
-            const savedMatch = playoffsMatches.find(m => m.round === round && m.team1 === team1 && m.team2 === team2);
-            const goals1 = savedMatch ? (savedMatch.score1 !== null ? savedMatch.score1 : '') : '';
-            const goals2 = savedMatch ? (savedMatch.score2 !== null ? savedMatch.score2 : '') : '';
-            const savedClass = (goals1 !== '' && goals2 !== '') ? 'saved' : '';
-
-            const team1Name = team1 || 'Aguardando...';
-            const team2Name = team2 || 'Aguardando...';
-
-            return `
-                <div class="bg-white rounded-lg p-4 shadow-sm border">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="font-semibold text-gray-800 text-sm">${team1Name}</span>
-                        <span class="text-gray-500 font-bold">VS</span>
-                        <span class="font-semibold text-gray-800 text-sm">${team2Name}</span>
-                    </div>
-                    <div class="flex items-center justify-center space-x-2">
-                        <input type="number" 
-                               id="playoffs_goals_${round}_${matchIndex}_0" 
-                               class="match-input w-12 h-10 text-center border-2 border-gray-300 rounded-lg font-bold text-lg focus:border-blue-500 focus:outline-none ${savedClass}"
-                               min="0" 
-                               placeholder="0"
-                               data-round="${round}"
-                               data-match-type="playoffs"
-                               data-match-id="${matchIndex}"
-                               data-team-name="${team1}">
-                        <span class="text-gray-400 font-bold">-</span>
-                        <input type="number" 
-                               id="playoffs_goals_${round}_${matchIndex}_1" 
-                               class="match-input w-12 h-10 text-center border-2 border-gray-300 rounded-lg font-bold text-lg focus:border-blue-500 focus:outline-none ${savedClass}"
-                               min="0" 
-                               placeholder="0"
-                               data-round="${round}"
-                               data-match-type="playoffs"
-                               data-match-id="${matchIndex}"
-                               data-team-name="${team2}">
-                    </div>
-                </div>
-            `;
-        }
-
-        function createPlayoffs() {
-            // Encontra os 4 melhores times com base na tabela final
-            const sortedTeams = teams.slice().sort((a, b) => {
-                const statsA = teamStats[a];
-                const statsB = teamStats[b];
-                if (statsB.points !== statsA.points) return statsB.points - statsA.points;
-                const sgA = calculateGoalDifference(statsA.goalsFor, statsA.goalsAgainst);
-                const sgB = calculateGoalDifference(statsB.goalsFor, statsB.goalsAgainst);
-                if (sgB !== sgA) return sgB - sgA;
-                return statsB.goalsFor - statsA.goalsFor;
-            });
-
-            const classifiedTeams = sortedTeams.slice(0, 4);
-
-            const semifinals = [
-                [classifiedTeams[0], classifiedTeams[3]],
-                [classifiedTeams[1], classifiedTeams[2]]
-            ];
-
-            const semifinalsContainer = document.getElementById('semifinalsContainer');
-            semifinalsContainer.innerHTML = `
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Semifinais</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    ${renderPlayoffMatch(semifinals[0], 1, 0)}
-                    ${renderPlayoffMatch(semifinals[1], 1, 1)}
-                </div>
-            `;
-            
-            const semifinal1Winner = getPlayoffWinner(semifinals[0], 1);
-            const semifinal2Winner = getPlayoffWinner(semifinals[1], 1);
-
-            const finalContainer = document.getElementById('finalContainer');
-            if (semifinal1Winner && semifinal2Winner) {
-                finalContainer.innerHTML = `
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Final</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${renderPlayoffMatch([semifinal1Winner, semifinal2Winner], 2, 0)}
-                    </div>
-                `;
-            } else {
-                finalContainer.innerHTML = `<p class="text-gray-500">Resultados da final aparecerão após as semifinais.</p>`;
-            }
-
-            // Adicionar event listeners para os jogos eliminatórios
-            document.querySelectorAll('.match-input[data-match-type="playoffs"]').forEach(input => {
-                let saveTimeout;
-                input.addEventListener('input', function() {
-                    const round = parseInt(this.dataset.round);
-                    const matchIndex = parseInt(this.dataset.matchId);
-                    
-                    const goals1Input = document.getElementById(`playoffs_goals_${round}_${matchIndex}_0`);
-                    const goals2Input = document.getElementById(`playoffs_goals_${round}_${matchIndex}_1`);
-
-                    // Remover classes visuais
-                    goals1Input.classList.remove('saved');
-                    goals2Input.classList.remove('saved');
-
-                    clearTimeout(saveTimeout);
-                    saveTimeout = setTimeout(() => {
-                        saveMatch('knockout_matches', round, goals1Input.dataset.teamName, goals2Input.dataset.teamName, goals1Input.value, goals2Input.value);
-                    }, 1000);
-                });
-            });
-        }
-
-        // Função para compartilhar resultados da rodada
-        function shareRoundResults(roundNumber) {
-            const round = rounds[roundNumber - 1];
-            let message = `🏆 *Liga eFootball - Rodada ${roundNumber}*\n\n`;
-
-            round.forEach((match, index) => {
-                const team1 = match[0];
-                const team2 = match[1];
-
-                const savedMatch = matchesData.find(m => 
-                    m.round === roundNumber && m.team1 === team1 && m.team2 === team2
-                );
-
-                if (savedMatch && savedMatch.goals1 !== null && savedMatch.goals2 !== null) {
-                    const goals1 = savedMatch.goals1;
-                    const goals2 = savedMatch.goals2;
-                    let result = '';
-
-                    if (goals1 > goals2) {
-                        result = '🟢';
-                    } else if (goals1 < goals2) {
-                        result = '🔴';
-                    } else {
-                        result = '🟡';
-                    }
-
-                    message += `${result} ${team1} ${goals1} x ${goals2} ${team2}\n`;
-                } else {
-                    message += `⚪ ${team1} - x - ${team2}\n`;
-                }
-            });
-
-            message += `\n📊 Acompanhe a classificação completa: ${window.location.href}`;
-
-            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-        }
-
-        // Função para compartilhar classificação
-        function shareLeague() {
-            calculateStats();
-
-            const sortedTeams = teams.slice().sort((a, b) => {
-                const statsA = teamStats[a];
-                const statsB = teamStats[b];
-
-                if (statsB.points !== statsA.points) {
-                    return statsB.points - statsA.points;
-                }
-
-                const sgA = calculateGoalDifference(statsA.goalsFor, statsA.goalsAgainst);
-                const sgB = calculateGoalDifference(statsB.goalsFor, statsB.goalsAgainst);
-
-                if (sgB !== sgA) {
-                    return sgB - sgA;
-                }
-
-                return statsB.goalsFor - statsA.goalsFor;
-            });
-
-            let message = `🏆 *Liga eFootball - Classificação*\n\n`;
-
-            sortedTeams.forEach((team, index) => {
-                const stats = teamStats[team];
-                const goalDiff = calculateGoalDifference(stats.goalsFor, stats.goalsAgainst);
-                const position = index + 1;
-
-                let emoji = '';
-                if (position <= 4) emoji = '🟢';
-                else if (position >= 7) emoji = '🔴';
-                else emoji = '🟡';
-
-                message += `${emoji} ${position}º ${team} - ${stats.points}pts (${stats.games}j)\n`;
-            });
-
-            message += `\n📊 Acompanhe todos os resultados: ${window.location.href}`;
-
-            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-        }
-
-        // Configurar sincronização em tempo real
-        function setupRealTimeSync() {
-            const channel = supabase
-                .channel('matches_changes')
-                .on('postgres_changes', 
-                    { event: '*', schema: 'public', table: 'matches' },
-                    (payload) => {
-                        console.log('Dados da fase de grupos atualizados!');
-                        loadMatches();
-                    }
-                )
-                .on('postgres_changes', 
-                    { event: '*', schema: 'public', table: 'knockout_matches' },
-                    (payload) => {
-                        console.log('Dados da fase eliminatória atualizados!');
-                        loadMatches();
-                    }
-                )
-                .subscribe();
-        }
-
-        // Inicializar aplicação
-        async function init() {
-            initializeStats();
-            createRounds();
-            await loadMatches();
-            setupRealTimeSync();
-        }
-
-        // Inicializar quando a página carregar
-        window.addEventListener('load', init);
-    </script>
-</body>
-</html>
+                        <button onclick="shareRoundResults(${roundIndex + 1})" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition
